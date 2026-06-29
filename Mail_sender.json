@@ -1,0 +1,137 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "69474545-6fcb-4e3c-af01-d3866f93fad6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://openai.com/news/rss.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "dda635fa-bdc7-4774-aa79-9bf7b8898d6b",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "af5ee84d-5166-41be-b00f-219d769c6bb6",
+              "leftValue": "={{ $json.categories[0] }}",
+              "rightValue": "Safety",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "336dbc60-1291-45ed-a2bf-e1ffb580d9cc",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "sendTo": "manosen2006@gmail.com",
+        "subject": "={{ $json.title }}{{ $json.link }}",
+        "emailType": "text",
+        "message": "=Todays News:  {{ $json.categories[0] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "9db995bc-c622-47d0-87e5-17e1b9180f47",
+      "name": "Send a message",
+      "webhookId": "2b53dfa5-f5a2-4baf-915e-e60cd98c976a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "8wv64JxTJBjiBtS9",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "12e3f32d-2675-49a6-b545-ffb6ff622d77",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f9484d378b9847c0dfed54eeff8aebe4b611f21cd769f0b14791a9f3ad4cbc39"
+  },
+  "nodeGroups": [],
+  "id": "1Ikk8MBC3ieBS5mG",
+  "tags": []
+}
